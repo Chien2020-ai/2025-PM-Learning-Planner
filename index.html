@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 PM Learning Planner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .total-time {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .tips {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .tips h3 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2025 PM Learning Planner</h1>
+        
+        <form id="learningPlanForm">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" required>
+            </div>
+
+            <div class="time-grid">
+                <div class="form-group">
+                    <label for="structuredLearning">Structured Learning (hours):</label>
+                    <input type="number" id="structuredLearning" min="0" step="0.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="practicalProjects">Practical Projects (hours):</label>
+                    <input type="number" id="practicalProjects" min="0" step="0.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="communityEngagement">Community Engagement (hours):</label>
+                    <input type="number" id="communityEngagement" min="0" step="0.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="portfolioBuilding">Portfolio Building (hours):</label>
+                    <input type="number" id="portfolioBuilding" min="0" step="0.5" required>
+                </div>
+            </div>
+
+            <div class="total-time" id="totalTime">
+                Total Time: 0 hours
+            </div>
+
+            <div class="form-group">
+                <label for="learningFocus">Today's Learning Focus:</label>
+                <select id="learningFocus" required>
+                    <option value="">Select your focus area</option>
+                    <option value="foundations">Product Management Foundations</option>
+                    <option value="technical">Technical Skills</option>
+                    <option value="ai-ml">AI/ML Product Management</option>
+                    <option value="business">Business Skills</option>
+                    <option value="leadership">Leadership & Communication</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Learning Notes:</label>
+                <textarea id="notes" rows="4" placeholder="What did you learn today? What challenges did you face? What are your next steps?"></textarea>
+            </div>
+
+            <button type="submit">Save Entry</button>
+
+            <div id="successMessage" class="success-message">
+                Entry saved successfully!
+            </div>
+        </form>
+
+        <div class="tips">
+            <h3>Quick Tips</h3>
+            <ul>
+                <li>Aim for a balanced mix of learning activities</li>
+                <li>Include both theoretical and practical work</li>
+                <li>Document your progress and insights daily</li>
+                <li>Review and adjust your time allocation weekly</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Calculate total time
+        function calculateTotal() {
+            const structured = parseFloat(document.getElementById('structuredLearning').value) || 0;
+            const practical = parseFloat(document.getElementById('practicalProjects').value) || 0;
+            const community = parseFloat(document.getElementById('communityEngagement').value) || 0;
+            const portfolio = parseFloat(document.getElementById('portfolioBuilding').value) || 0;
+            
+            const total = structured + practical + community + portfolio;
+            document.getElementById('totalTime').textContent = `Total Time: ${total} hours`;
+        }
+
+        // Add event listeners to time inputs
+        ['structuredLearning', 'practicalProjects', 'communityEngagement', 'portfolioBuilding'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateTotal);
+        });
+
+        // Form submission
+        document.getElementById('learningPlanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Save to localStorage
+            const formData = {
+                date: document.getElementById('date').value,
+                structuredLearning: document.getElementById('structuredLearning').value,
+                practicalProjects: document.getElementById('practicalProjects').value,
+                communityEngagement: document.getElementById('communityEngagement').value,
+                portfolioBuilding: document.getElementById('portfolioBuilding').value,
+                learningFocus: document.getElementById('learningFocus').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            const savedData = JSON.parse(localStorage.getItem('pmLearningData') || '[]');
+            savedData.push(formData);
+            localStorage.setItem('pmLearningData', JSON.stringify(savedData));
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        });
+
+        // Set default date to today
+        document.getElementById('date').valueAsDate = new Date();
+    </script>
+</body>
+</html>
